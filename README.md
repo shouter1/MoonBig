@@ -11,9 +11,10 @@ Sky Tracker for Astrophotography/General Use
 - Toggleable Wikipedia links for notable objects
 - Cloud coverage (Open-Meteo) and estimated Bortle class panel
 
-## Run locally
-Because this is a static app, open `index.html` in a browser.
+## Run the desktop app
+1. Install dependencies:
+   - `npm install`
+2. Start MoonBig:
+   - `npm start`
 
-For best results (geolocation and weather API):
-- Serve from a local web server (for example: `python3 -m http.server`), then open the shown URL
-- Click **Use My Location**
+MoonBig now runs as a desktop app using Electron and does not require self-hosting in a browser.
