@@ -1,0 +1,19 @@
+{
+  "name": "moonbig",
+  "version": "1.0.0",
+  "description": "MoonBig desktop sky tracker",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [
+    "astronomy",
+    "sky",
+    "tracker"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^44.5.1"
+  }
+}

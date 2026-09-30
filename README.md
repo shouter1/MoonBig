@@ -11,9 +11,27 @@ Sky Tracker for Astrophotography/General Use
 - Toggleable Wikipedia links for notable objects
 - Cloud coverage (Open-Meteo) and estimated Bortle class panel
 
-## Run locally
-Because this is a static app, open `index.html` in a browser.
+## Run the desktop app
+### Requirements
+- Node.js 20+ and npm
 
-For best results (geolocation and weather API):
-- Serve from a local web server (for example: `python3 -m http.server`), then open the shown URL
-- Click **Use My Location**
+### Setup
+1. Install dependencies:
+   - `npm install`
+
+### Start
+1. Launch MoonBig:
+   - `npm start`
+
+MoonBig runs as an Electron desktop app and does not require self-hosting in a browser.
+
+## How to use
+1. Click **Use My Location** and allow geolocation access.
+2. Type in the search box to find objects by name.
+3. Enable **Show all sky objects** to browse all available items.
+4. Enable **Look-around mode** and move the heading slider to filter by direction.
+5. Click **Direction & angle** on any object to view detailed pointing info.
+
+## Troubleshooting
+- **Electron sandbox error on Linux CI/headless environments:** run with `npm start -- --no-sandbox`.
+- **Missing display server (headless runner):** Electron GUI apps require a desktop/X server to open a window.
