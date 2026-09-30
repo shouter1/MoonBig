@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MoonBig Sky Tracker</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="panel">
+        <h1>MoonBig</h1>
+        <p class="subtitle">Clean sky tracking for planets, moons, constellations, and deep sky objects.</p>
+      </header>
+
+      <section class="panel controls">
+        <div class="search-row">
+          <input id="searchInput" type="search" placeholder="Search for Mars, Orion, Andromeda..." aria-label="Search sky object" />
+          <button id="locateBtn">Use My Location</button>
+        </div>
+
+        <div class="toggles">
+          <label><input id="showAllToggle" type="checkbox" /> Show all sky objects</label>
+          <label><input id="showWikiToggle" type="checkbox" checked /> Show Wikipedia links</label>
+          <label><input id="lookAroundToggle" type="checkbox" /> Look-around mode</label>
+        </div>
+
+        <div class="look-controls" id="lookControls" hidden>
+          <label for="headingRange">Heading</label>
+          <input id="headingRange" type="range" min="0" max="359" value="0" />
+          <span id="headingLabel">0° (N)</span>
+        </div>
+      </section>
+
+      <section class="panel status-grid">
+        <div>
+          <h2>Location</h2>
+          <p id="locationText">Location not set.</p>
+        </div>
+        <div>
+          <h2>Sky Conditions</h2>
+          <p id="cloudText">Cloud coverage: --</p>
+          <p id="bortleText">Estimated Bortle: --</p>
+        </div>
+      </section>
+
+      <section class="panel tab-panel">
+        <div class="tabs">
+          <button class="tab active" data-tab="sky">Sky Graph</button>
+          <button class="tab" data-tab="details">Direction & Angle</button>
+        </div>
+
+        <div id="skyTab" class="tab-content active">
+          <canvas id="skyCanvas" width="1000" height="360" aria-label="2D sky graph"></canvas>
+          <p class="hint">Altitude: 0° = horizon, 90° = overhead.</p>
+        </div>
+
+        <div id="detailsTab" class="tab-content">
+          <div id="selectedDetails" class="details-card">Select an object to view direction and angle.</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Matching Objects</h2>
+        <div id="results" class="results"></div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
