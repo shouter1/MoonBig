@@ -338,7 +338,7 @@ function requestLocation() {
     return;
   }
 
-  if (!window.isSecureContext) {
+  if (!window.isSecureContext && window.location.protocol !== "file:") {
     els.locationText.textContent = "Location requires HTTPS or localhost.";
     return;
   }
@@ -347,7 +347,6 @@ function requestLocation() {
   els.locateBtn.disabled = true;
   els.locateBtn.textContent = "Finding…";
   renderStatus();
-
   navigator.geolocation.getCurrentPosition(
     ({ coords }) => {
       state.lat = coords.latitude;
