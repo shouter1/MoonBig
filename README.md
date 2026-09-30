@@ -7,9 +7,11 @@ Sky Tracker for Astrophotography/General Use
 - Live keyword search that narrows objects as typing progresses
 - Sideways 2D sky graph (azimuth vs altitude)
 - Separate direction/angle view for selected object
-- "Show all sky objects" mode plus look-around heading filter
+- "Show all sky objects" mode plus look-around heading filter (enabled by default)
 - Toggleable Wikipedia links for notable objects
 - Cloud coverage (Open-Meteo) and estimated Bortle class panel
+- Approximate sky preview when location is not set yet
+- Improved location request status and error messages
 
 ## Run the desktop app
 ### Requirements

@@ -1,0 +1,9 @@
+{
+  "name": "MoonBig Sky Tracker",
+  "short_name": "MoonBig",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f2f5fb",
+  "theme_color": "#7f9cf7",
+  "description": "Sky tracker for planets, moons, constellations, and deep sky objects."
+}

@@ -28,12 +28,13 @@ const state = {
   lat: null,
   lon: null,
   search: "",
-  showAll: false,
+  showAll: true,
   showWiki: true,
   lookAround: false,
   heading: 0,
   selected: null,
   cloudCover: null,
+  locating: false,
   tab: "sky"
 };
 
@@ -104,10 +105,16 @@ function radecToHorizontal(raHours, decDeg, latDeg, lonDeg, date) {
 
 function objectPosition(obj) {
   if (state.lat == null || state.lon == null) {
-    return { altitude: null, azimuth: null, visible: false };
+    const approximateAltitude = Math.max(0, Math.min(90, (obj.dec + 90) / 2));
+    return {
+      altitude: approximateAltitude,
+      azimuth: normalizeDeg((obj.ra / 24) * 360),
+      visible: true,
+      approximate: true
+    };
   }
   const { altitude, azimuth } = radecToHorizontal(obj.ra, obj.dec, state.lat, state.lon, new Date());
-  return { altitude, azimuth, visible: altitude >= 0 };
+  return { altitude, azimuth, visible: altitude >= 0, approximate: false };
 }
 
 function getBortleEstimate(lat, lon) {
@@ -148,8 +155,13 @@ async function loadCloudCover(lat, lon) {
 }
 
 function renderStatus() {
+  if (state.locating) {
+    els.locationText.textContent = "Getting your location…";
+    return;
+  }
+
   if (state.lat == null || state.lon == null) {
-    els.locationText.textContent = "Location not set.";
+    els.locationText.textContent = "Location not set (showing approximate sky preview).";
     els.cloudText.textContent = "Cloud coverage: --";
     els.bortleText.textContent = "Estimated Bortle: --";
     return;
@@ -221,7 +233,7 @@ function renderResults() {
     row.innerHTML = `
       <div>
         <h3>${obj.name}</h3>
-        <p>${obj.type}${obj.altitude == null ? "" : ` • ${obj.altitude.toFixed(1)}° • ${compassLabel(obj.azimuth)} (${obj.azimuth.toFixed(0)}°)`}</p>
+        <p>${obj.type}${obj.altitude == null ? "" : ` • ${obj.altitude.toFixed(1)}° • ${compassLabel(obj.azimuth)} (${obj.azimuth.toFixed(0)}°)`}${obj.approximate ? " • Approximate preview" : ""}</p>
         <span class="badge ${badgeClass}">${visibility}</span>
         ${state.showWiki && obj.notable ? `<p><a href="${obj.wiki}" target="_blank" rel="noreferrer">Wikipedia</a></p>` : ""}
       </div>
@@ -261,6 +273,7 @@ function renderDetails(obj) {
     <p>Direction: ${compassLabel(obj.azimuth)} (${obj.azimuth.toFixed(1)}° azimuth)</p>
     <p>Angle: ${obj.altitude.toFixed(1)}° altitude (0° horizon, 90° overhead)</p>
     <p>Visibility: ${visibility}</p>
+    ${obj.approximate ? "<p>Using approximate position until your location is available.</p>" : ""}
     ${state.showWiki && obj.notable ? `<p><a href="${obj.wiki}" target="_blank" rel="noreferrer">Open Wikipedia</a></p>` : ""}
   `;
 }
@@ -324,18 +337,40 @@ function requestLocation() {
     els.locationText.textContent = "Geolocation not supported.";
     return;
   }
+
+  if (!window.isSecureContext && window.location.protocol !== "file:") {
+    els.locationText.textContent = "Location requires HTTPS or localhost.";
+    return;
+  }
+
+  state.locating = true;
+  els.locateBtn.disabled = true;
+  els.locateBtn.textContent = "Finding…";
+  renderStatus();
   navigator.geolocation.getCurrentPosition(
     ({ coords }) => {
       state.lat = coords.latitude;
       state.lon = coords.longitude;
+      state.locating = false;
+      els.locateBtn.disabled = false;
+      els.locateBtn.textContent = "Use My Location";
       renderStatus();
       loadCloudCover(state.lat, state.lon);
       renderResults();
     },
-    () => {
-      els.locationText.textContent = "Location access denied. Entering manual mode without coordinates.";
+    (error) => {
+      state.locating = false;
+      els.locateBtn.disabled = false;
+      els.locateBtn.textContent = "Use My Location";
+      if (error.code === error.PERMISSION_DENIED) {
+        els.locationText.textContent = "Location permission denied. Allow location access in browser settings.";
+      } else if (error.code === error.TIMEOUT) {
+        els.locationText.textContent = "Location request timed out. Try again.";
+      } else {
+        els.locationText.textContent = "Unable to get location right now.";
+      }
     },
-    { enableHighAccuracy: true, timeout: 7000 }
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
   );
 }
 
@@ -378,3 +413,9 @@ setupEvents();
 renderStatus();
 renderResults();
 setInterval(renderResults, 20000);
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}

@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#7f9cf7" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="manifest" href="./manifest.webmanifest" />
     <title>MoonBig Sky Tracker</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
@@ -16,11 +19,11 @@
       <section class="panel controls">
         <div class="search-row">
           <input id="searchInput" type="search" placeholder="Search for Mars, Orion, Andromeda..." aria-label="Search sky object" />
-          <button id="locateBtn">Use My Location</button>
+          <button id="locateBtn" type="button">Use My Location</button>
         </div>
 
         <div class="toggles">
-          <label><input id="showAllToggle" type="checkbox" /> Show all sky objects</label>
+          <label><input id="showAllToggle" type="checkbox" checked /> Show all sky objects</label>
           <label><input id="showWikiToggle" type="checkbox" checked /> Show Wikipedia links</label>
           <label><input id="lookAroundToggle" type="checkbox" /> Look-around mode</label>
         </div>
